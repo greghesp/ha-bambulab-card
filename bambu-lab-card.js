@@ -26,7 +26,12 @@ class Bambu_lab_card extends LitElement {
         const states = this.hass.states;
         const possEntities = []
 
-        let printer, ams = [], chamberLight, nozzleTemp, bedTemp;
+        let printer, ams = [];
+        const params = {
+            chamberLight: null,
+            nozzleTemp: null,
+            bedTemp: null
+        }
 
         for(const d in devices){
             if(devices[d].manufacturer === "Bambu Lab" && devices[d].via_device_id === null) printer = devices[d];
@@ -38,24 +43,24 @@ class Bambu_lab_card extends LitElement {
         for(const e in entities) {
             // console.log(e)
                 if(entities[e].platform == "bambu_lab") {
-                    if (e.includes("chamber_light")) chamberLight = states[e];
-                    if (e.includes("nozzle_temperature")) nozzleTemp = states[e];
-                    if (e.includes("bed_temperature") && !e.includes("target_bed")) bedTemp = states[e];
+                    if (e.includes("chamber_light")) params.chamberLight = states[e];
+                    if (e.includes("nozzle_temperature")) params.nozzleTemp = states[e];
+                    if (e.includes("bed_temperature") && !e.includes("target_bed")) params.bedTemp = states[e];
                     possEntities.push(e)
                 }
         }
 
+
         if(this.config.entities){
             for(const e in this.config.entities){
-                if(e = "chamberLight") {
-                    chamberLight = this.config.entities[e]
-                }
-
+                if(params[e]) params[e] = states[this.config.entities[e]]
             }
         }
 
+        console.log(params)
+
         function printerImage() {
-            if(printer.model === "X1C") return `/local/community/bambu-lab-card/images/X1C_${chamberLight.state}.png`
+            if(printer.model === "X1C") return `/local/community/bambu-lab-card/images/X1C_${params.chamberLight.state}.png`
             if(printer.model ===" P1P") return `/local/community/bambu-lab-card/images/P1P_on.png`
         }
 
@@ -65,8 +70,8 @@ class Bambu_lab_card extends LitElement {
             <printer>
                 <img class="printer" src="${printerImage()}"/>
                 <img class="x1c-screen" src="/local/community/bambu-lab-card/images/x1c_screen_on.png"/>
-                <nozzle-temp>${nozzleTemp.state}°C</nozzle-temp>
-                <bed-temp>${bedTemp.state}°C</bed-temp>
+                <nozzle-temp>${params.nozzleTemp.state}°C</nozzle-temp>
+                <bed-temp>${params.bedTemp.state}°C</bed-temp>
             </printer>
         <footer>
             <textStatus>Test</textStatus>
