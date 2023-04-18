@@ -33,15 +33,15 @@ class Bambu_lab_card extends LitElement {
             bedTemp: null
         }
 
+        // Get printer info and AMS information
         for(const d in devices){
             if(devices[d].manufacturer === "Bambu Lab" && devices[d].via_device_id === null) printer = devices[d];
             if(devices[d].manufacturer === "Bambu Lab" && devices[d].via_device_id !== null) ams.push(devices[d])
         }
 
 
-        // console.log(entities)
+        // Setup sensors automatically
         for(const e in entities) {
-            // console.log(e)
                 if(entities[e].platform == "bambu_lab") {
                     if (e.includes("chamber_light")) params.chamberLight = states[e];
                     if (e.includes("nozzle_temperature")) params.nozzleTemp = states[e];
@@ -50,14 +50,13 @@ class Bambu_lab_card extends LitElement {
                 }
         }
 
-
+        // Set overrides for sensors based on config
         if(this.config.entities){
             for(const e in this.config.entities){
                 if(params[e]) params[e] = states[this.config.entities[e]]
             }
         }
 
-        console.log(params)
 
         function printerImage() {
             if(printer.model === "X1C") return `/local/community/bambu-lab-card/images/X1C_${params.chamberLight.state}.png`
@@ -66,21 +65,21 @@ class Bambu_lab_card extends LitElement {
 
 
         return html`
-    <card>
+        <card>
             <printer>
                 <img class="printer" src="${printerImage()}"/>
                 <img class="x1c-screen" src="/local/community/bambu-lab-card/images/x1c_screen_on.png"/>
                 <nozzle-temp>${params.nozzleTemp.state}°C</nozzle-temp>
                 <bed-temp>${params.bedTemp.state}°C</bed-temp>
             </printer>
-        <footer>
-            <textStatus>Test</textStatus>
-            <icons>
-              <ha-state-icon .icon="mdi:battery"></ha-state-icon>
-            </icons>
-        </footer>
-      </background>
-    </card>`
+            <footer>
+                <textStatus>Test</textStatus>
+                <icons>
+                  <ha-state-icon .icon="mdi:battery"></ha-state-icon>
+                </icons>
+            </footer>
+          </background>
+        </card>`
     }
 
     setConfig(config) {
