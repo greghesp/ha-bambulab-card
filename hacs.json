@@ -1,4 +1,6 @@
 {
   "name": "Bambu Lab Card",
-  "render_readme": false
+  "render_readme": true,
+  "filename": "card.js",
+  "content_in_root": false
 }
