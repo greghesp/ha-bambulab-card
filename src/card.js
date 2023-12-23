@@ -12,8 +12,8 @@ export class ToggleCardLit extends LitElement {
             _header: { state: true },
             _entity: { state: true },
             // _name: { state: true },
-            // _state: { state: true },
-            // _status: { state: true }
+            _state: { state: true },
+            _status: { state: true }
         };
     }
 
@@ -33,13 +33,15 @@ export class ToggleCardLit extends LitElement {
         this._states = hass.states;
         this._entities = Object.values(this._hass.entities).filter(obj => obj.device_id === this._device_id);
         this._device_name = Object.values(this._hass.devices).filter(obj => obj.id === this._device_id)[0].name.toLowerCase();
+        this._state = hass.states[`${this._device_name}_bed_temperature`];
 
-        console.log(this._device_name)
-        // if (this._state) {
-        //     this._status = this._state.state;
-        //     let fn = this._state.attributes.friendly_name;
-        //     this._name = fn ? fn : this._entity;
-        // }
+        if (this._state) {
+            this._status = this._state.state;
+            let fn = this._state.attributes.friendly_name;
+            this._name = fn ? fn : this._entity;
+            console.log(this._status)
+            console.log(this._name)
+        }
     }
 
     // declarative part
@@ -48,6 +50,13 @@ export class ToggleCardLit extends LitElement {
     render() {
         let content;
 
+        if (!this._state) {
+            content = html`
+                <p class="error">
+                    ${this._entity} is unavailable.
+                </p>
+            `;
+        } else {
             content = html`
                 <div class="ams-container">
                     <img id="image" src="/local/community/bambu-lab-card/images/AMS.png" style="display:block;">
@@ -82,7 +91,8 @@ export class ToggleCardLit extends LitElement {
                     </div>
                     
                 </div>
-            `;
+                
+            `;}
 
         return html`
             <ha-card header="${this._header}">
