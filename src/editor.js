@@ -1,4 +1,5 @@
 import { css, html, LitElement } from 'lit';
+import {ams_models, printer_models} from "./consts";
 
 export class ToggleCardLitEditor extends LitElement {
     static get properties() {
@@ -9,13 +10,9 @@ export class ToggleCardLitEditor extends LitElement {
     }
 
     async setConfig(config) {
-        // console.log("SET CONFIG", config)
-        console.log(this.hass.callWS)
-        const integrations = await this.hass.callWS({type: "manifest/list"})
-        console.log(integrations)
-
         const device_list = await this.hass.callWS({type: "config/device_registry/list"})
-        console.log(device_list)
+        const bambu_devices =  device_list.filter(obj => obj.identifiers[0].includes('bambu_lab'))
+        this._devices = bambu_devices.filter(obj => ams_models.includes(obj.model))
         this._config = config;
     }
 
@@ -43,9 +40,11 @@ export class ToggleCardLitEditor extends LitElement {
                 </div>
                 <div class="row">
                     <label class="label cell" for="entity">Entity:</label>
-                    <input
-                            @change="${this.handleChangedEvent}"
-                            class="value cell" id="entity" value="${this._config.entity}"></input>
+                    <select name="entity" id="entity" @change="${this.handleChangedEvent}"
+                            class="value cell" id="entity" value="${this._config.entity}">
+                        <option value="none">Select Device...</option>
+                        ${this._devices.map(d => html`<option value="${d.id}">${d.name}</option>`)}
+                    </select>
                 </div>
             </form>
         `;
@@ -53,12 +52,14 @@ export class ToggleCardLitEditor extends LitElement {
 
     handleChangedEvent(changedEvent) {
         // this._config is readonly, copy needed
+
         var newConfig = Object.assign({}, this._config);
-        if (changedEvent.target.id == "header") {
+        if (changedEvent.target.id === "header") {
             newConfig.header = changedEvent.target.value;
-        } else if (changedEvent.target.id == "entity") {
-            newConfig.entity = changedEvent.target.value;
+        } else if (changedEvent.target.id === "entity") {
+            newConfig.device_id = changedEvent.target.value;
         }
+        console.log(changedEvent.target)
         const messageEvent = new CustomEvent("config-changed", {
             detail: { config: newConfig },
             bubbles: true,

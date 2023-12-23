@@ -41,6 +41,7 @@ export default css`
   }
 
   .ams-container .spool-type {
+    color: white;
     top: 70%;
     text-align: center;
     padding: 8px;
@@ -62,7 +63,7 @@ export default css`
     border-radius: 25px;
     pointer-events: none;
     position: absolute;
-    z-index: 2
+    z-index: 3
   }
   
 .error {
