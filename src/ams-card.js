@@ -11,7 +11,8 @@ export class BambuLabAMSCard extends LitElement {
         return {
             _header: { state: true },
             _entity: { state: true },
-            // _name: { state: true },
+            _device_id: { state: true },
+            _name: { state: true },
             _state: { state: true },
             _status: { state: true }
         };

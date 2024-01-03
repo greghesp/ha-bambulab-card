@@ -6,6 +6,7 @@ export class AMSCardEditor extends LitElement {
         return {
             hass: {},
             _config: { state: true },
+            _devices: { state: true },
         };
     }
 

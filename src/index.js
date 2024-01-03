@@ -11,10 +11,10 @@ customElements.define(
     AMSCardEditor
 );
 
-
 window.customCards = window.customCards || [];
 window.customCards.push({
     type: "bambu-lab-ams-card",
     name: "Bambu Lab AMS Card",
     description: "Card for the Bambu Lab AMS",
 });
+
