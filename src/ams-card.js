@@ -113,10 +113,10 @@ export class BambuLabAMSCard extends LitElement {
         return document.createElement("bambu-lab-ams-card-editor");
     }
 
-    static getStubConfig() {
-        return {
-            entity: "input_boolean.tcl",
-            header: "",
-        };
-    }
+    // static getStubConfig() {
+    //     return {
+    //         entity: "input_boolean.tcl",
+    //         header: "",
+    //     };
+    // }
 }

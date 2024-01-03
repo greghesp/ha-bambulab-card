@@ -30,6 +30,7 @@ export class AMSCardEditor extends LitElement {
     `;
 
     render() {
+        console.log(this._config)
         return html`
             <form class="table">
                 <div class="row">
@@ -39,9 +40,9 @@ export class AMSCardEditor extends LitElement {
                             class="value cell" id="header" value="${this._config.header}"></input>
                 </div>
                 <div class="row">
-                    <label class="label cell" for="entity">Entity:</label>
-                    <select name="entity" id="entity" @change="${this.handleChangedEvent}"
-                            class="value cell" id="entity" value="${this._config.entity}">
+                    <label class="label cell" for="device">Entity:</label>
+                    <select name="device" id="device" @change="${this.handleChangedEvent}"
+                            class="value cell" id="device" value="${this._config.device_id}">
                         <option value="none">Select Device...</option>
                         ${this._devices.map(d => html`<option value="${d.id}">${d.name}</option>`)}
                     </select>
@@ -52,19 +53,18 @@ export class AMSCardEditor extends LitElement {
 
     handleChangedEvent(changedEvent) {
         // this._config is readonly, copy needed
-
-        var newConfig = Object.assign({}, this._config);
+        const newConfig = Object.assign({}, this._config);
         if (changedEvent.target.id === "header") {
             newConfig.header = changedEvent.target.value;
-        } else if (changedEvent.target.id === "entity") {
+        } else if (changedEvent.target.id === "device") {
             newConfig.device_id = changedEvent.target.value;
         }
-        console.log(changedEvent.target)
         const messageEvent = new CustomEvent("config-changed", {
             detail: { config: newConfig },
             bubbles: true,
             composed: true,
         });
+        console.log(messageEvent)
         this.dispatchEvent(messageEvent);
     }
 }
