@@ -1,6 +1,12 @@
 import { html, LitElement, nothing } from 'lit';
 import styles from './card.styles';
-import {images} from "./consts";
+
+import AMSImage from 'data-url:../images/ams.png';
+import Humidity1 from 'data-url:../images/humidity-index-1.svg';
+import Humidity2 from 'data-url:../images/humidity-index-2.svg';
+import Humidity3 from 'data-url:../images/humidity-index-3.svg';
+import Humidity4 from 'data-url:../images/humidity-index-4.svg';
+import Humidity5 from 'data-url:../images/humidity-index-5.svg';
 
 export class BambuLabAMSCard extends LitElement {
 
@@ -54,6 +60,23 @@ export class BambuLabAMSCard extends LitElement {
 
     render() {
         let content;
+        let humidity;
+        switch(this._states[`sensor.${this._device_name}_humidity_index`].state) {
+            case '1':
+                humidity = Humidity1;
+                break
+            case '2':
+                humidity = Humidity2;
+                break;
+            case '3':
+                humidity = Humidity3;
+                break;
+            case '4':
+                humidity = Humidity4;
+                break;
+            default:
+                humidity = Humidity5;
+        }
 
         if (!this._state) {
             content = html`
@@ -64,7 +87,7 @@ export class BambuLabAMSCard extends LitElement {
         } else {
             content = html`
                 <div class="ams-container">
-                    <img id="image" src=${images.AMS} style="display:block;">
+                    <img src=${AMSImage} style="display:block;" id="image">
                     <span class="spool-badge slot-1" style="box-shadow: 0 0 5px 5px ${this._states[`sensor.${this._device_name}_tray_1`].attributes.active ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'}">
                         <ha-icon icon=${this._states[`sensor.${this._device_name}_tray_1`].state !==
                         'Empty' ? 'mdi:printer-3d-nozzle' : 'mdi:tray'} style="color: ${this._states[`sensor.${this._device_name}_tray_1`].attributes.color};"></ha-icon>
@@ -81,6 +104,7 @@ export class BambuLabAMSCard extends LitElement {
                          <ha-icon icon=${this._states[`sensor.${this._device_name}_tray_4`].state !==
                          'Empty' ? 'mdi:printer-3d-nozzle' : 'mdi:tray'} style="color: ${this._states[`sensor.${this._device_name}_tray_4`].attributes.color};"></ha-icon>
                     </span>
+                    <img src=${humidity} class="humidity">
                     
                         <span class="spool-type slot-1">${this._states[`sensor.${this._device_name}_tray_1`].attributes.type}</span>
                         <span class="spool-type slot-2">${this._states[`sensor.${this._device_name}_tray_2`].attributes.type}</span>
@@ -89,8 +113,6 @@ export class BambuLabAMSCard extends LitElement {
                     
                     <div>
                         <span class="ams-temperature">${this._states[`sensor.${this._device_name}_ams_temperature`].state}</span>
-                        <span class="ams-humidity">${this._states[`sensor.${this._device_name}_humidity_index`].state}</span>
-<!--                        <img id="image" src="/local/community/bambu-lab-card/images/humidity-index-1.svg" style="display:block;">-->
 
                        
                     </div>

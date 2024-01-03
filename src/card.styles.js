@@ -10,6 +10,20 @@ export default css`
   .ams-container img {
     width: 100%;
   }
+  
+  .ams-container .humidity {
+    top: 35%;
+    text-align: center;
+    font-size: 1em;
+    background-color: rgba(0, 0, 0);
+    border-radius: 50px;
+    padding: 8px;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+    left: 90%;
+    width: 30px;
+  }
 
   .ams-container .spool-badge {
     top: 20%;
