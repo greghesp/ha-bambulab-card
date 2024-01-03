@@ -1,5 +1,6 @@
 import { html, LitElement, nothing } from 'lit';
 import styles from './card.styles';
+import {images} from "./consts";
 
 export class BambuLabAMSCard extends LitElement {
 
@@ -36,6 +37,10 @@ export class BambuLabAMSCard extends LitElement {
         this._device_name = Object.values(this._hass.devices).filter(obj => obj.id === this._device_id)[0].name.toLowerCase();
         this._state = hass.states[`sensor.${this._device_name}_ams_temperature`];
         this._entity = `sensor.${this._device_name}_ams_temperature` // set entity to be used in render()
+        console.log("entity", this._entity)
+        console.log("_device_name", this._device_name)
+        console.log("state", this._state)
+
 
         if (this._state) {
             this._status = this._state.state;
@@ -59,7 +64,7 @@ export class BambuLabAMSCard extends LitElement {
         } else {
             content = html`
                 <div class="ams-container">
-                    <img id="image" src="/local/community/bambu-lab-card/images/AMS.png" style="display:block;">
+                    <img id="image" src=${images.AMS} style="display:block;">
                     <span class="spool-badge slot-1" style="box-shadow: 0 0 5px 5px ${this._states[`sensor.${this._device_name}_tray_1`].attributes.active ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'}">
                         <ha-icon icon=${this._states[`sensor.${this._device_name}_tray_1`].state !==
                         'Empty' ? 'mdi:printer-3d-nozzle' : 'mdi:tray'} style="color: ${this._states[`sensor.${this._device_name}_tray_1`].attributes.color};"></ha-icon>
@@ -76,12 +81,12 @@ export class BambuLabAMSCard extends LitElement {
                          <ha-icon icon=${this._states[`sensor.${this._device_name}_tray_4`].state !==
                          'Empty' ? 'mdi:printer-3d-nozzle' : 'mdi:tray'} style="color: ${this._states[`sensor.${this._device_name}_tray_4`].attributes.color};"></ha-icon>
                     </span>
-                    <div>
+                    
                         <span class="spool-type slot-1">${this._states[`sensor.${this._device_name}_tray_1`].attributes.type}</span>
                         <span class="spool-type slot-2">${this._states[`sensor.${this._device_name}_tray_2`].attributes.type}</span>
                         <span class="spool-type slot-3">${this._states[`sensor.${this._device_name}_tray_3`].attributes.type}</span>
                         <span class="spool-type slot-4">${this._states[`sensor.${this._device_name}_tray_4`].attributes.type}</span>
-                    </div>
+                    
                     <div>
                         <span class="ams-temperature">${this._states[`sensor.${this._device_name}_ams_temperature`].state}</span>
                         <span class="ams-humidity">${this._states[`sensor.${this._device_name}_humidity_index`].state}</span>

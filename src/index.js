@@ -6,6 +6,7 @@ customElements.define(
     BambuLabAMSCard
 );
 
+
 customElements.define(
     "bambu-lab-ams-card-editor",
     AMSCardEditor
@@ -16,5 +17,5 @@ window.customCards.push({
     type: "bambu-lab-ams-card",
     name: "Bambu Lab AMS Card",
     description: "Card for the Bambu Lab AMS",
+    preview: true
 });
-

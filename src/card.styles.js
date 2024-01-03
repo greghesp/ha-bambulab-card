@@ -2,7 +2,6 @@ import { css } from 'lit';
 
 export default css`
   
-  
   .ams-container {
     height: 100%;
     position: relative; 
@@ -24,25 +23,25 @@ export default css`
     z-index: 2
   }
   
-  .ams-container .slot-1 {
+  .slot-1 {
     left: 17%;
   }
 
-  .ams-container .slot-2 {
+  .slot-2 {
     left: 35.5%;
   }
 
-  .ams-container .slot-3 {
+ .slot-3 {
     left: 55.7%;
   }
   
-  .ams-container .slot-4 {
+   .slot-4 {
     left: 75.5%;
   }
 
   .ams-container .spool-type {
     color: white;
-    top: 70%;
+    top: 60%;
     text-align: center;
     padding: 8px;
     font-size: 1em;
