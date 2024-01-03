@@ -1,20 +1,20 @@
-import { ToggleCardLit } from "./card";
-import { ToggleCardLitEditor } from "./editor";
+import { BambuLabAMSCard } from "./ams-card";
+import { AMSCardEditor } from "./ams-editor";
 
 customElements.define(
-    "bambu-lab-card",
-    ToggleCardLit
+    "bambu-lab-ams-card",
+    BambuLabAMSCard
 );
 
 customElements.define(
-    "bambu-lab-card-editor",
-    ToggleCardLitEditor
+    "bambu-lab-ams-card-editor",
+    AMSCardEditor
 );
 
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: "bambu-lab-card",
-    name: "toggle card based on LitElement",
-    description: "Turn an entity on and off",
+    type: "bambu-lab-ams-card",
+    name: "Bambu Lab AMS Card",
+    description: "Card for the Bambu Lab AMS",
 });

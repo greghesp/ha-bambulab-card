@@ -1,7 +1,7 @@
 import { html, LitElement, nothing } from 'lit';
 import styles from './card.styles';
 
-export class ToggleCardLit extends LitElement {
+export class BambuLabAMSCard extends LitElement {
 
     // private property
     _hass;
@@ -39,8 +39,6 @@ export class ToggleCardLit extends LitElement {
             this._status = this._state.state;
             let fn = this._state.attributes.friendly_name;
             this._name = fn ? fn : this._entity;
-            console.log(this._status)
-            console.log(this._name)
         }
     }
 
@@ -112,7 +110,7 @@ export class ToggleCardLit extends LitElement {
 
     // card configuration
     static getConfigElement() {
-        return document.createElement("bambu-lab-card-editor");
+        return document.createElement("bambu-lab-ams-card-editor");
     }
 
     static getStubConfig() {

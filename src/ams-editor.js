@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import {ams_models, printer_models} from "./consts";
 
-export class ToggleCardLitEditor extends LitElement {
+export class AMSCardEditor extends LitElement {
     static get properties() {
         return {
             hass: {},
