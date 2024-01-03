@@ -31,7 +31,7 @@ export class AMSCardEditor extends LitElement {
     `;
 
     render() {
-        console.log(this._config)
+        console.log("editor:", this._config)
         return html`
             <form class="table">
                 <div class="row">

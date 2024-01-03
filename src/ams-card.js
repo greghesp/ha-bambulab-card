@@ -32,9 +32,10 @@ export class BambuLabAMSCard extends LitElement {
     set hass(hass) {
         this._hass = hass;
         this._states = hass.states;
-        this._entities = Object.values(this._hass.entities).filter(obj => obj.device_id === this._device_id);
+        // this._entities = Object.values(this._hass.entities).filter(obj => obj.device_id === this._device_id);
         this._device_name = Object.values(this._hass.devices).filter(obj => obj.id === this._device_id)[0].name.toLowerCase();
-        this._state = hass.states[`${this._device_name}_bed_temperature`];
+        this._state = hass.states[`sensor.${this._device_name}_ams_temperature`];
+        this._entity = `sensor.${this._device_name}_ams_temperature` // set entity to be used in render()
 
         if (this._state) {
             this._status = this._state.state;
