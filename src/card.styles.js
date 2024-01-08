@@ -1,10 +1,40 @@
 import { css } from 'lit';
 
 export default css`
-  
   .ams-container {
     height: 100%;
     position: relative; 
+  }
+  
+  .vector {
+    background: #E3E1E1;
+    border-radius: 10px;
+  }
+  
+  .vector .spools {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: stretch;
+    align-content: center;
+    padding:25px 0;
+    height: 120px;
+  }
+  
+  .vector .spool {
+    width: 18%;
+    height: 100%;
+    background: white;
+    border-radius: 5px;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .spool .overlay {
+    z-index: 2;
+    background: red;
+    height: 50%;
   }
   
   .ams-container img {

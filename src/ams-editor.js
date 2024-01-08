@@ -41,11 +41,20 @@ export class AMSCardEditor extends LitElement {
                             class="value cell" id="header" value="${this._config.header}"></input>
                 </div>
                 <div class="row">
+                    <label class="label cell" for="style">Card:</label>
+                    <select name="device" id="style" @change="${this.handleChangedEvent}"
+                            class="value cell" id="style" value="${this._config.style}">
+                        <option value="vector">Vector</option>
+                        <option value="graphic">Graphic</option>
+                       
+                    </select>
+                </div>
+                <div class="row">
                     <label class="label cell" for="device">Entity:</label>
                     <select name="device" id="device" @change="${this.handleChangedEvent}"
                             class="value cell" id="device" value="${this._config.device_id}">
                         <option value="none">Select Device...</option>
-                        ${this._devices.map(d => html`<option value="${d.id}">${d.name}</option>`)}
+                        ${this._devices.map(d => html`<option value="${d.id}" selected=${this._config.device_id === d.id}>${d.name}</option>`)}
                     </select>
                 </div>
             </form>
@@ -59,13 +68,14 @@ export class AMSCardEditor extends LitElement {
             newConfig.header = changedEvent.target.value;
         } else if (changedEvent.target.id === "device") {
             newConfig.device_id = changedEvent.target.value;
+        } else if (changedEvent.target.id === "style") {
+            newConfig.style = changedEvent.target.value;
         }
         const messageEvent = new CustomEvent("config-changed", {
             detail: { config: newConfig },
             bubbles: true,
             composed: true,
         });
-        console.log(messageEvent)
         this.dispatchEvent(messageEvent);
     }
 }
