@@ -6,6 +6,7 @@ import Humidity2 from "../images/humidity-index-2.svg";
 import Humidity3 from "../images/humidity-index-3.svg";
 import Humidity4 from "../images/humidity-index-4.svg";
 import Humidity5 from "../images/humidity-index-5.svg";
+import { ams_models } from "./consts";
 
 export class BambuLabAMSCard extends LitElement {
   // private property
@@ -21,6 +22,7 @@ export class BambuLabAMSCard extends LitElement {
       _state: { state: true },
       _style: { state: true },
       _status: { state: true },
+      _devices: { state: true },
     };
   }
 
@@ -39,15 +41,24 @@ export class BambuLabAMSCard extends LitElement {
   set hass(hass) {
     this._hass = hass;
     this._states = hass.states;
-    // this._entities = Object.values(this._hass.entities).filter(obj => obj.device_id === this._device_id);
+
+    // get all bambu_lab devices
+    const bambu_devices = Object.entries(this._hass.devices).filter(
+      ([key, value]) => value.identifiers[0].includes("bambu_lab"),
+    );
+
+    // filter out all devices that are not ams
+    this._devices = bambu_devices.filter(([key, value]) =>
+      ams_models.includes(value.model),
+    );
+
     this._device_name = Object.values(this._hass.devices)
       .filter((obj) => obj.id === this._device_id)[0]
       .name.toLowerCase();
     this._state = hass.states[`sensor.${this._device_name}_ams_temperature`];
     this._entity = `sensor.${this._device_name}_ams_temperature`; // set entity to be used in render()
-    // console.log("entity", this._entity)
-    // console.log("_device_name", this._device_name)
-    // console.log("state", this._state)
+
+    console.log(this._devices);
 
     if (this._state) {
       this._status = this._state.state;
@@ -86,28 +97,35 @@ export class BambuLabAMSCard extends LitElement {
       content = html` <p class="error">${this._entity} is unavailable.</p> `;
     }
     if (this._style === "vector") {
-      content = html`<div class="ams-container">
-        <div class="vector">
-          <div class="spools">
-            <div class="spool">
-              <div class="overlay">PLA</div>
+      content = html`
+        <div class="selector">
+          ${this._devices.map(
+            (device) =>
+              html` <div class="ams-tabs">
+                <div class="spool"><div class="overlay">&nbsp;</div></div>
+                <div class="spool"><div class="overlay">&nbsp;</div></div>
+                <div class="spool"><div class="overlay">&nbsp;</div></div>
+                <div class="spool"><div class="overlay">&nbsp;</div></div>
+              </div>`,
+          )}
+        </div>
+
+        <div class="ams-container">
+          <div class="vector">
+            <div class="spools">
+              <div class="spool">
+                <div class="overlay">PLA</div>
+              </div>
+              <div class="spool">PLA</div>
+              <div class="spool">PLA</div>
+              <div class="spool">PLA</div>
             </div>
-            <div class="spool">PLA</div>
-            <div class="spool">PLA</div>
-            <div class="spool">PLA</div>
           </div>
         </div>
-      </div> `;
+      `;
     } else {
       content = html`
-        <div>
-          <span>
-            <div>2</div>
-            <div>2</div>
-            <div>3</div>
-            <div>1</div>
-          </span>
-        </div>
+        <div></div>
         <div class="ams-container graphic">
           <img src=${AMSImage} style="display:block;" id="image" />
           <span
