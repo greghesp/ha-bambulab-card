@@ -9,7 +9,7 @@ export default css`
   .ams-tabs {
     background: #e3e1e1;
     border-radius: 5px;
-    padding: 2px 5px;
+    padding: 5px;
     display: flex;
     justify-content: space-evenly;
     align-items: stretch;
@@ -18,7 +18,7 @@ export default css`
   }
 
   .ams-tabs .spool {
-    height: 100%;
+    height: 15px;
     background: white;
     border-radius: 2px;
     z-index: 1;
@@ -26,7 +26,7 @@ export default css`
     justify-content: flex-end;
     flex-direction: column;
     overflow: hidden;
-    width: 10px;
+    width: 15px;
   }
 
   .vector {

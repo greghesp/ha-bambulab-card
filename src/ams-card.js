@@ -1,4 +1,4 @@
-import { html, LitElement, nothing } from "lit";
+import {html, LitElement, nothing} from "lit";
 import styles from "./card.styles";
 import AMSImage from "../images/ams.png";
 import Humidity1 from "../images/humidity-index-1.svg";
@@ -6,7 +6,7 @@ import Humidity2 from "../images/humidity-index-2.svg";
 import Humidity3 from "../images/humidity-index-3.svg";
 import Humidity4 from "../images/humidity-index-4.svg";
 import Humidity5 from "../images/humidity-index-5.svg";
-import { ams_models } from "./consts";
+import {ams_models} from "./consts";
 
 export class BambuLabAMSCard extends LitElement {
   // private property
@@ -16,7 +16,8 @@ export class BambuLabAMSCard extends LitElement {
   static get properties() {
     return {
       _header: { state: true },
-      _entity: { state: true },
+      // _entity: { state: true },
+      _entities: { state: true },
       _device_id: { state: true },
       _name: { state: true },
       _state: { state: true },
@@ -42,23 +43,28 @@ export class BambuLabAMSCard extends LitElement {
     this._hass = hass;
     this._states = hass.states;
 
+    // console.log("hass", hass);
+
     // get all bambu_lab devices
     const bambu_devices = Object.entries(this._hass.devices).filter(
       ([key, value]) => value.identifiers[0].includes("bambu_lab"),
     );
+
 
     // filter out all devices that are not ams
     this._devices = bambu_devices.filter(([key, value]) =>
       ams_models.includes(value.model),
     );
 
-    this._device_name = Object.values(this._hass.devices)
-      .filter((obj) => obj.id === this._device_id)[0]
-      .name.toLowerCase();
-    this._state = hass.states[`sensor.${this._device_name}_ams_temperature`];
-    this._entity = `sensor.${this._device_name}_ams_temperature`; // set entity to be used in render()
+    // get all entities for each AMS
+    let all_entities = [];
+    this._devices.forEach(([key, value]) => {
+      all_entities.push(Object.fromEntries(Object.entries(this._hass.entities).filter(([k, v]) => v.device_id === value.id)))
+    })
+    this._entities = all_entities
 
-    console.log(this._devices);
+    // this._entity = `sensor.${this._device_name}_ams_temperature`; // set entity to be used in render()
+
 
     if (this._state) {
       this._status = this._state.state;
@@ -74,39 +80,39 @@ export class BambuLabAMSCard extends LitElement {
     let content;
     let humidity;
 
-    console.log("style", this._style);
+    console.log("devices", this._devices);
+    console.log("entities", this._entities);
 
-    switch (this._states[`sensor.${this._device_name}_humidity_index`].state) {
-      case "1":
-        humidity = Humidity1;
-        break;
-      case "2":
-        humidity = Humidity2;
-        break;
-      case "3":
-        humidity = Humidity3;
-        break;
-      case "4":
-        humidity = Humidity4;
-        break;
-      default:
-        humidity = Humidity5;
-    }
+    // switch (this._states[`sensor.${this._device_name}_humidity_index`].state) {
+    //   case "1":
+    //     humidity = Humidity1;
+    //     break;
+    //   case "2":
+    //     humidity = Humidity2;
+    //     break;
+    //   case "3":
+    //     humidity = Humidity3;
+    //     break;
+    //   case "4":
+    //     humidity = Humidity4;
+    //     break;
+    //   default:
+    //     humidity = Humidity5;
+    // }
 
-    if (!this._state) {
-      content = html` <p class="error">${this._entity} is unavailable.</p> `;
-    }
     if (this._style === "vector") {
       content = html`
         <div class="selector">
-          ${this._devices.map(
-            (device) =>
-              html` <div class="ams-tabs">
-                <div class="spool"><div class="overlay">&nbsp;</div></div>
-                <div class="spool"><div class="overlay">&nbsp;</div></div>
-                <div class="spool"><div class="overlay">&nbsp;</div></div>
-                <div class="spool"><div class="overlay">&nbsp;</div></div>
-              </div>`,
+          ${Object.keys(this._entities).map(
+              (entity) =>
+                  html`
+                    <div class="ams-tabs">
+                     
+                      <div class="spool">${entity}</div>
+                      <div class="spool">&nbsp;</div>
+                      <div class="spool">&nbsp;</div>
+                      <div class="spool">&nbsp;</div>
+                    </div>`
           )}
         </div>
 
@@ -123,106 +129,107 @@ export class BambuLabAMSCard extends LitElement {
           </div>
         </div>
       `;
-    } else {
-      content = html`
-        <div></div>
-        <div class="ams-container graphic">
-          <img src=${AMSImage} style="display:block;" id="image" />
-          <span
-            class="spool-badge slot-1"
-            style="box-shadow: 0 0 5px 5px ${this._states[
-              `sensor.${this._device_name}_tray_1`
-            ].attributes.active
-              ? "rgba(255,255,255,0.5)"
-              : "rgba(0,0,0,0.5)"}"
-          >
-            <ha-icon
-              icon=${this._states[`sensor.${this._device_name}_tray_1`]
-                .state !== "Empty"
-                ? "mdi:printer-3d-nozzle"
-                : "mdi:tray"}
-              style="color: ${this._states[`sensor.${this._device_name}_tray_1`]
-                .attributes.color};"
-            ></ha-icon>
-          </span>
-          <span
-            class="spool-badge slot-2"
-            style="box-shadow: 0 0 5px 5px ${this._states[
-              `sensor.${this._device_name}_tray_2`
-            ].attributes.active
-              ? "rgba(255,255,255,0.5)"
-              : "rgba(0,0,0,0.5)"}"
-          >
-            <ha-icon
-              icon=${this._states[`sensor.${this._device_name}_tray_2`]
-                .state !== "Empty"
-                ? "mdi:printer-3d-nozzle"
-                : "mdi:tray"}
-              style="color: ${this._states[`sensor.${this._device_name}_tray_2`]
-                .attributes.color};"
-            ></ha-icon>
-          </span>
-          <span
-            class="spool-badge slot-3"
-            style="box-shadow: 0 0 5px 5px ${this._states[
-              `sensor.${this._device_name}_tray_3`
-            ].attributes.active
-              ? "rgba(255,255,255,0.5)"
-              : "rgba(0,0,0,0.5)"}"
-          >
-            <ha-icon
-              icon=${this._states[`sensor.${this._device_name}_tray_3`]
-                .state !== "Empty"
-                ? "mdi:printer-3d-nozzle"
-                : "mdi:tray"}
-              style="color: ${this._states[`sensor.${this._device_name}_tray_3`]
-                .attributes.color};"
-            ></ha-icon>
-          </span>
-          <span
-            class="spool-badge slot-4"
-            style="box-shadow: 0 0 5px 5px ${this._states[
-              `sensor.${this._device_name}_tray_4`
-            ].attributes.active
-              ? "rgba(255,255,255,0.5)"
-              : "rgba(0,0,0,0.5)"}"
-          >
-            <ha-icon
-              icon=${this._states[`sensor.${this._device_name}_tray_4`]
-                .state !== "Empty"
-                ? "mdi:printer-3d-nozzle"
-                : "mdi:tray"}
-              style="color: ${this._states[`sensor.${this._device_name}_tray_4`]
-                .attributes.color};"
-            ></ha-icon>
-          </span>
-          <img src=${humidity} class="humidity" />
-
-          <span class="spool-type slot-1"
-            >${this._states[`sensor.${this._device_name}_tray_1`].attributes
-              .type}</span
-          >
-          <span class="spool-type slot-2"
-            >${this._states[`sensor.${this._device_name}_tray_2`].attributes
-              .type}</span
-          >
-          <span class="spool-type slot-3"
-            >${this._states[`sensor.${this._device_name}_tray_3`].attributes
-              .type}</span
-          >
-          <span class="spool-type slot-4"
-            >${this._states[`sensor.${this._device_name}_tray_4`].attributes
-              .type}</span
-          >
-
-          <div>
-            <span class="ams-temperature"
-              >${this._states[`sensor.${this._device_name}_ams_temperature`]
-                .state}</span
-            >
-          </div>
-        </div>
-      `;
+      // } else {
+      //   content = html`
+      //     <div></div>
+      //     <div class="ams-container graphic">
+      //       <img src=${AMSImage} style="display:block;" id="image" />
+      //       <span
+      //         class="spool-badge slot-1"
+      //         style="box-shadow: 0 0 5px 5px ${this._states[
+      //           `sensor.${this._device_name}_tray_1`
+      //         ].attributes.active
+      //           ? "rgba(255,255,255,0.5)"
+      //           : "rgba(0,0,0,0.5)"}"
+      //       >
+      //         <ha-icon
+      //           icon=${this._states[`sensor.${this._device_name}_tray_1`]
+      //             .state !== "Empty"
+      //             ? "mdi:printer-3d-nozzle"
+      //             : "mdi:tray"}
+      //           style="color: ${this._states[`sensor.${this._device_name}_tray_1`]
+      //             .attributes.color};"
+      //         ></ha-icon>
+      //       </span>
+      //       <span
+      //         class="spool-badge slot-2"
+      //         style="box-shadow: 0 0 5px 5px ${this._states[
+      //           `sensor.${this._device_name}_tray_2`
+      //         ].attributes.active
+      //           ? "rgba(255,255,255,0.5)"
+      //           : "rgba(0,0,0,0.5)"}"
+      //       >
+      //         <ha-icon
+      //           icon=${this._states[`sensor.${this._device_name}_tray_2`]
+      //             .state !== "Empty"
+      //             ? "mdi:printer-3d-nozzle"
+      //             : "mdi:tray"}
+      //           style="color: ${this._states[`sensor.${this._device_name}_tray_2`]
+      //             .attributes.color};"
+      //         ></ha-icon>
+      //       </span>
+      //       <span
+      //         class="spool-badge slot-3"
+      //         style="box-shadow: 0 0 5px 5px ${this._states[
+      //           `sensor.${this._device_name}_tray_3`
+      //         ].attributes.active
+      //           ? "rgba(255,255,255,0.5)"
+      //           : "rgba(0,0,0,0.5)"}"
+      //       >
+      //         <ha-icon
+      //           icon=${this._states[`sensor.${this._device_name}_tray_3`]
+      //             .state !== "Empty"
+      //             ? "mdi:printer-3d-nozzle"
+      //             : "mdi:tray"}
+      //           style="color: ${this._states[`sensor.${this._device_name}_tray_3`]
+      //             .attributes.color};"
+      //         ></ha-icon>
+      //       </span>
+      //       <span
+      //         class="spool-badge slot-4"
+      //         style="box-shadow: 0 0 5px 5px ${this._states[
+      //           `sensor.${this._device_name}_tray_4`
+      //         ].attributes.active
+      //           ? "rgba(255,255,255,0.5)"
+      //           : "rgba(0,0,0,0.5)"}"
+      //       >
+      //         <ha-icon
+      //           icon=${this._states[`sensor.${this._device_name}_tray_4`]
+      //             .state !== "Empty"
+      //             ? "mdi:printer-3d-nozzle"
+      //             : "mdi:tray"}
+      //           style="color: ${this._states[`sensor.${this._device_name}_tray_4`]
+      //             .attributes.color};"
+      //         ></ha-icon>
+      //       </span>
+      //       <img src=${humidity} class="humidity" />
+      //
+      //       <span class="spool-type slot-1"
+      //         >${this._states[`sensor.${this._device_name}_tray_1`].attributes
+      //           .type}</span
+      //       >
+      //       <span class="spool-type slot-2"
+      //         >${this._states[`sensor.${this._device_name}_tray_2`].attributes
+      //           .type}</span
+      //       >
+      //       <span class="spool-type slot-3"
+      //         >${this._states[`sensor.${this._device_name}_tray_3`].attributes
+      //           .type}</span
+      //       >
+      //       <span class="spool-type slot-4"
+      //         >${this._states[`sensor.${this._device_name}_tray_4`].attributes
+      //           .type}</span
+      //       >
+      //
+      //       <div>
+      //         <span class="ams-temperature"
+      //           >${this._states[`sensor.${this._device_name}_ams_temperature`]
+      //             .state}</span
+      //         >
+      //       </div>
+      //     </div>
+      //   `;
+      // }
     }
 
     return html`
