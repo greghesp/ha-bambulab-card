@@ -11,12 +11,14 @@
     "build": "rollup --config rollup.config.mjs"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "prettier": "^3.1.1",
     "rollup": "^4.9.4",
     "rollup-plugin-img": "^1.1.0"
   },
   "dependencies": {
-    "lit": "^2.7.4"
+    "lit": "^2.7.4",
+    "lodash": "^4.17.21"
   }
 }

@@ -1,5 +1,6 @@
 import {html, LitElement, nothing} from "lit";
 import styles from "./card.styles";
+import _ from 'lodash';
 import AMSImage from "../images/ams.png";
 import Humidity1 from "../images/humidity-index-1.svg";
 import Humidity2 from "../images/humidity-index-2.svg";
@@ -11,6 +12,7 @@ import {ams_models} from "./consts";
 export class BambuLabAMSCard extends LitElement {
   // private property
   _hass;
+
 
   // internal reactive states
   static get properties() {
@@ -43,31 +45,21 @@ export class BambuLabAMSCard extends LitElement {
     this._hass = hass;
     this._states = hass.states;
 
-    // console.log("hass", hass);
 
     // get all bambu_lab devices
-    const bambu_devices = Object.entries(this._hass.devices).filter(
-      function([key, value]) {
-        return value.identifiers[0].includes("bambu_lab");
-      }
-  );
-
-    console.log("hass devices", this._hass.devices)
-    console.log("bambu_devices", bambu_devices)
+    const bambu_devices = Object.values(this._hass.devices).filter( value =>  value.identifiers[0].includes("bambu_lab"));
 
     // filter out all devices that are not ams
-    this._devices = bambu_devices.filter(([key, value]) =>
+    this._devices = bambu_devices.filter(value =>
       ams_models.includes(value.model),
     );
 
     // get all entities for each AMS
     let all_entities = [];
-    this._devices.forEach(([key, value]) => {
+    this._devices.forEach(value => {
       all_entities.push(Object.fromEntries(Object.entries(this._hass.entities).filter(([k, v]) => v.device_id === value.id)))
     })
     this._entities = all_entities
-
-    // this._entity = `sensor.${this._device_name}_ams_temperature`; // set entity to be used in render()
 
 
     if (this._state) {
@@ -84,8 +76,8 @@ export class BambuLabAMSCard extends LitElement {
     let content;
     let humidity;
 
-    console.log("devices", this._devices);
-    console.log("entities", this._entities);
+    // console.log("devices", this._devices);
+    // console.log("entities", this._entities);
 
     // switch (this._states[`sensor.${this._device_name}_humidity_index`].state) {
     //   case "1":
@@ -104,28 +96,29 @@ export class BambuLabAMSCard extends LitElement {
     //     humidity = Humidity5;
     // }
 
-    Object.entries(this._entities).map((entity, i) => {
-      console.log("i", this._entities[i]);
-      console.log("entity", entity);
-      // const e = this._entities[i].filter((e) => e.entity_id.includes("tray_1"))
-      // console.log("e", e);
-        }
-    )
+  // Object.values(this._entities).map((entity) => {
+  //   console.log(entity)
+  // })
 
+
+    // sensor.${this._device_name}_humidity_index`].state
     if (this._style === "vector") {
       content = html`
         <div class="selector">
-          ${Object.keys(this._entities).map(
-              (entity) =>
-                  html`
-                    <div class="ams-tabs">
-                     
-                      <div class="spool">${entity}</div>
-                      <div class="spool">&nbsp;</div>
-                      <div class="spool">&nbsp;</div>
-                      <div class="spool">&nbsp;</div>
-                    </div>`
-          )}
+          ${Object.values(this._entities).map(
+              function (entity) {
+                console.log("t", _.find(entity, {"translation_key": "tray_1"}).entity_id)
+                return html`
+    
+                        <div class="ams-tabs">
+                          <div class="spool">test
+    </div>
+                          <div class="spool">&nbsp;</div>
+                          <div class="spool">&nbsp;</div>
+                          <div class="spool">&nbsp;</div>
+                        </div>
+      `
+      })}
         </div>
 
         <div class="ams-container">

@@ -1,4 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+
 import image from 'rollup-plugin-img';
 
 
@@ -9,7 +11,7 @@ export default {
         dir: 'dist',
         format: 'cjs'
     },
-    plugins: [nodeResolve(),
+    plugins: [nodeResolve(),commonjs(),
         image({
         output: `dist/images`,
             limit: 10000000
