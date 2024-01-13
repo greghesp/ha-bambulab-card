@@ -47,9 +47,13 @@ export class BambuLabAMSCard extends LitElement {
 
     // get all bambu_lab devices
     const bambu_devices = Object.entries(this._hass.devices).filter(
-      ([key, value]) => value.identifiers[0].includes("bambu_lab"),
-    );
+      function([key, value]) {
+        return value.identifiers[0].includes("bambu_lab");
+      }
+  );
 
+    console.log("hass devices", this._hass.devices)
+    console.log("bambu_devices", bambu_devices)
 
     // filter out all devices that are not ams
     this._devices = bambu_devices.filter(([key, value]) =>
@@ -99,6 +103,14 @@ export class BambuLabAMSCard extends LitElement {
     //   default:
     //     humidity = Humidity5;
     // }
+
+    Object.entries(this._entities).map((entity, i) => {
+      console.log("i", this._entities[i]);
+      console.log("entity", entity);
+      // const e = this._entities[i].filter((e) => e.entity_id.includes("tray_1"))
+      // console.log("e", e);
+        }
+    )
 
     if (this._style === "vector") {
       content = html`
