@@ -75,6 +75,7 @@ export class BambuLabAMSCard extends LitElement {
   render() {
     let content;
     let humidity;
+    let selected_device_id = "5581c8bcbb84d2f7ea3d35a6c5facdb8"
 
     // console.log("devices", this._devices);
     // console.log("entities", this._entities);
@@ -101,15 +102,14 @@ export class BambuLabAMSCard extends LitElement {
   // })
 
 
-
     if (this._style === "vector") {
       content = html`
         <div class="selector">
           ${Object.values(this._entities).map(
                (entity) => {
-                 console.log(entity)
+                 console.log(this._states[_.find(entity, {"translation_key": "tray_1"}).device_id])
                  return html`
-                        <div class="ams-tabs">
+                        <div class="ams-tabs ${this._states[_.find(entity, {"translation_key": "tray_1"}).device_id] === selected_device_id ? "selected" : ""}">
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}">&nbsp;</div>
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_2"}).entity_id].attributes.color}">&nbsp;</div>
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_3"}).entity_id].attributes.color}">&nbsp;</div>

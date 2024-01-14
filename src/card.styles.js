@@ -16,6 +16,11 @@ export default css`
     align-content: center;
     gap: 5px;
   }
+  
+  .ams-tabs .selected {
+    outline: 1px solid green;
+    outline-offset: 2px;
+  }
 
   .ams-tabs .spool {
     height: 15px;
