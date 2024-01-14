@@ -101,26 +101,23 @@ export class BambuLabAMSCard extends LitElement {
   // })
 
 
-    // sensor.${this._device_name}_humidity_index`].state
+
     if (this._style === "vector") {
       content = html`
         <div class="selector">
           ${Object.values(this._entities).map(
-              function (entity) {
-                console.log("t", _.find(entity, {"translation_key": "tray_1"}).entity_id)
-                return html`
-    
+               (entity) => {
+                 return html`
                         <div class="ams-tabs">
-                          <div class="spool">test
-    </div>
-                          <div class="spool">&nbsp;</div>
-                          <div class="spool">&nbsp;</div>
-                          <div class="spool">&nbsp;</div>
-                        </div>
-      `
-      })}
+                          <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}">&nbsp;</div>
+                          <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_2"}).entity_id].attributes.color}">&nbsp;</div>
+                          <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_3"}).entity_id].attributes.color}">&nbsp;</div>
+                          <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_4"}).entity_id].attributes.color}">&nbsp;</div>
+                        </div>`
+               }
+               )}
         </div>
-
+ 
         <div class="ams-container">
           <div class="vector">
             <div class="spools">
