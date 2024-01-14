@@ -107,6 +107,7 @@ export class BambuLabAMSCard extends LitElement {
         <div class="selector">
           ${Object.values(this._entities).map(
                (entity) => {
+                 console.log(entity)
                  return html`
                         <div class="ams-tabs">
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}">&nbsp;</div>
