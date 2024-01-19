@@ -17,8 +17,8 @@ export default css`
     gap: 5px;
   }
   
-  .ams-tabs .selected {
-    outline: 1px solid green;
+  .selector .selected {
+    outline: 2px solid #05AD42;
     outline-offset: 2px;
   }
 
@@ -70,8 +70,8 @@ export default css`
   }
   .spool .overlay {
     z-index: 2;
-    background: red;
-    height: 50%;
+    //background: red;
+    //height: 50%;
   }
 
   .ams-container img {
