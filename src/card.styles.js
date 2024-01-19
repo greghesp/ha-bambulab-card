@@ -12,11 +12,11 @@ export default css`
     padding: 5px;
     display: flex;
     justify-content: space-evenly;
-    align-items: stretch;
+    align-items: center;
     align-content: center;
     gap: 5px;
   }
-  
+
   .selector .selected {
     outline: 2px solid #05AD42;
     outline-offset: 2px;
@@ -32,6 +32,12 @@ export default css`
     flex-direction: column;
     overflow: hidden;
     width: 15px;
+  }
+
+  .ams-tabs .active-icon {
+    border-radius: 20px !important;
+    height: 8px !important;
+    width: 8px !important;
   }
 
   .vector {
@@ -68,6 +74,7 @@ export default css`
     flex-direction: column;
     overflow: hidden;
   }
+
   .spool .overlay {
     z-index: 2;
     //background: red;

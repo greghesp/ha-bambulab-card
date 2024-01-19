@@ -47,7 +47,6 @@ export class BambuLabAMSCard extends LitElement {
     this._hass = hass;
     this._states = hass.states;
 
-
     // get all bambu_lab devices
     const bambu_devices = Object.values(this._hass.devices).filter( value =>  value.identifiers[0].includes("bambu_lab"));
 
@@ -104,18 +103,27 @@ export class BambuLabAMSCard extends LitElement {
   //   console.log(entity)
   // })
 
+    console.log("entities", this._entities)
 
-    const selected_sensors  = this._entities.filter(o => Object.values(o)
-        .some(x => x.device_id === this._selected_device));
+    const selected_sensors  = this._entities.filter(o => Object.values(o).some(x => x.device_id === this._selected_device));
+    let active_device;
+
 
     if (this._style === "vector") {
       content = html`
         <div class="selector">
           ${Object.values(this._entities).map(
                (entity) => {
-                 const device_id = _.find(entity, {"translation_key": "tray_1"}).device_id
+                 const device_id = _.find(entity, {"translation_key": "tray_1"}).device_id;
+                 let is_active = false;
+                 
+                 Object.values(entity).forEach((value) => {
+                   if (this._states[value.entity_id].attributes.active === true) is_active = true
+                 })
+                 
                  return html`
                         <div class="ams-tabs ${device_id === this._selected_device ? "selected" : ""}" id={${device_id} @click=${() => this.selectAMS(device_id)}>
+                          <div class="spool active-icon" style="background-color: ${is_active ? "#05AD42" : "rgba(0, 0, 0, 0) !important"}; outline: ${is_active ? "none" : "1px solid #959595"}; outline-offset: ${is_active ? "none" : "-1px"}">&nbsp;</div>
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}">&nbsp;</div>
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_2"}).entity_id].attributes.color}">&nbsp;</div>
                           <div class="spool" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_3"}).entity_id].attributes.color}">&nbsp;</div>
@@ -130,7 +138,7 @@ export class BambuLabAMSCard extends LitElement {
             <div class="spools">
 
             ${Object.values(selected_sensors).map((entity) => {
-              console.log(this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id])
+              // console.log(this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id])
               return html`
                   <div class="spool">
                     <div class="overlay" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}; height: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.remain}%">PLA</div>
