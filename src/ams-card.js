@@ -25,7 +25,7 @@ export class BambuLabAMSCard extends LitElement {
       _state: { state: true },
       _style: { state: true },
       _status: { state: true },
-      _devices: { state: true },
+      _devices: { state: true }, // All AMS devices
       _selected_device: { state: true },
     };
   }
@@ -106,8 +106,6 @@ export class BambuLabAMSCard extends LitElement {
     console.log("entities", this._entities)
 
     const selected_sensors  = this._entities.filter(o => Object.values(o).some(x => x.device_id === this._selected_device));
-    let active_device;
-
 
     if (this._style === "vector") {
       content = html`
@@ -138,18 +136,21 @@ export class BambuLabAMSCard extends LitElement {
             <div class="spools">
 
             ${Object.values(selected_sensors).map((entity) => {
-              // console.log(this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id])
+              const active1 = this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.active;
+              const active2 = this._states[_.find(entity, {"translation_key": "tray_2"}).entity_id].attributes.active;
+              const active3 = this._states[_.find(entity, {"translation_key": "tray_3"}).entity_id].attributes.active;
+              const active4 = this._states[_.find(entity, {"translation_key": "tray_4"}).entity_id].attributes.active;
               return html`
-                  <div class="spool">
-                    <div class="overlay" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}; height: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.remain}%">PLA</div>
+                  <div class="spool ${active1 ? "selected" : ""}">
+                    <div class="overlay"  style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.color}; height: ${this._states[_.find(entity, {"translation_key": "tray_1"}).entity_id].attributes.remain}%">PLA</div>
                   </div>
-                  <div class="spool">                    
+                  <div class="spool ${active2 ? "selected" : ""}">                    
                     <div class="overlay" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_2"}).entity_id].attributes.color}; height: ${this._states[_.find(entity, {"translation_key": "tray_2"}).entity_id].attributes.remain}%">PLA</div>
                   </div>
-                  <div class="spool">
+                  <div class="spool ${active3 ? "selected" : ""}">
                     <div class="overlay" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_3"}).entity_id].attributes.color}; height: ${this._states[_.find(entity, {"translation_key": "tray_3"}).entity_id].attributes.remain}%">PLA</div>
                   </div>
-                  <div class="spool">
+                  <div class="spool ${active4 ? "selected" : ""}">
                     <div class="overlay" style="background-color: ${this._states[_.find(entity, {"translation_key": "tray_4"}).entity_id].attributes.color}; height: ${this._states[_.find(entity, {"translation_key": "tray_4"}).entity_id].attributes.remain}%">PLA</div>
                   </div>
               `

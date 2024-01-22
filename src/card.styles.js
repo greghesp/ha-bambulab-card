@@ -17,7 +17,7 @@ export default css`
     gap: 5px;
   }
 
-  .selector .selected {
+  .selected {
     outline: 2px solid #05AD42;
     outline-offset: 2px;
   }
